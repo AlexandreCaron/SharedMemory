@@ -1,2 +1,2 @@
 # SharedMemory
-Simple C++ Shared Memory Application
+Simplest C++ Shared Memory Application using the Windows API
