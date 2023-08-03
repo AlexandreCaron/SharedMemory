@@ -1,0 +1,5 @@
+Binaries/
+Intermediates/
+.vs/
+*.sln
+*.vcx*

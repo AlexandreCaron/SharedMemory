@@ -1,0 +1,3 @@
+[submodule "Dependencies/Premake5"]
+	path = Dependencies/Premake5
+	url = https://github.com/AlexandreCaron/Premake5
