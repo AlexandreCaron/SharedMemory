@@ -8,55 +8,55 @@
 
 namespace SharedMemory
 {
-	MemorySharer::MemorySharer()
-	{
-		shmem_size = sizeof(*buf);
+  MemorySharer::MemorySharer()
+  {
+    mSharedMemorySize = sizeof(*mBuffer);
 
-		mutex = CreateMutex(NULL, FALSE, L"mutex_name");
+    mMutex = CreateMutex(NULL, FALSE, L"mutex_name");
 
-		shmem = CreateFileMapping(
-			INVALID_HANDLE_VALUE,
-			NULL,
-			PAGE_READWRITE,
-			0,
-			shmem_size,
-			L"shared_memory_name"
-			);
+    mSharedMemory = CreateFileMapping(
+      INVALID_HANDLE_VALUE,
+      NULL,
+      PAGE_READWRITE,
+      0,
+      mSharedMemorySize,
+      L"shared_memory_name"
+    );
 
-		buf = static_cast<SHAREDBUFFER_t*> (MapViewOfFile(shmem, FILE_MAP_ALL_ACCESS, 0, 0, shmem_size));
-	}
+    mBuffer = static_cast<SHAREDBUFFER_t*> (MapViewOfFile(mSharedMemory, FILE_MAP_ALL_ACCESS, 0, 0, mSharedMemorySize));
+  }
 
-	MemorySharer::~MemorySharer()
-	{
-		// release
-		UnmapViewOfFile(buf);
-		CloseHandle(shmem);
-		ReleaseMutex(mutex);
-	}
+  MemorySharer::~MemorySharer()
+  {
+    // release
+    UnmapViewOfFile(mBuffer);
+    CloseHandle(mSharedMemory);
+    ReleaseMutex(mMutex);
+  }
 
-	SHAREDBUFFER_t MemorySharer::read_shared_buffer() const
-	{
-		// mutex lock
-		WaitForSingleObject(mutex, INFINITE);
+  SHAREDBUFFER_t MemorySharer::read_shared_buffer() const
+  {
+    // mutex lock
+    WaitForSingleObject(mMutex, INFINITE);
 
-		// Read in shared memory
-		SHAREDBUFFER_t wValue = *buf;
+    // Read in shared memory
+    SHAREDBUFFER_t wValue = *mBuffer;
 
-		// mutex unlock
-		ReleaseMutex(mutex);
+    // mutex unlock
+    ReleaseMutex(mMutex);
 
-		return wValue;
-	}
+    return wValue;
+  }
 
-	void MemorySharer::write_shared_buffer(SHAREDBUFFER_t iValue) const
-	{
-		// mutex lock
-		WaitForSingleObject(mutex, INFINITE);
+  void MemorySharer::write_shared_buffer(SHAREDBUFFER_t iValue) const
+  {
+    // mutex lock
+    WaitForSingleObject(mMutex, INFINITE);
 
-		// write in shared memory
-		*buf = iValue;
+    // write in shared memory
+    *mBuffer = iValue;
 
-		// mutex unlock
-		ReleaseMutex(mutex);
-	}
+    // mutex unlock
+    ReleaseMutex(mMutex);
+  }
 }

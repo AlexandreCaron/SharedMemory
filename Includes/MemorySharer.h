@@ -25,9 +25,9 @@ namespace SharedMemory
     void write_shared_buffer(SHAREDBUFFER_t iValue) const;
 
   private:
-    DWORD shmem_size;
-    HANDLE shmem;
-    HANDLE mutex;
-    SHAREDBUFFER_t* buf;
+    DWORD mSharedMemorySize;
+    HANDLE mSharedMemory;
+    HANDLE mMutex;
+    SHAREDBUFFER_t* mBuffer;
   };
 }
